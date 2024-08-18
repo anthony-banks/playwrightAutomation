@@ -1,0 +1,14 @@
+{
+  "name": "playwright-project",
+  "version": "1.0.0",
+  "description": "A project using Playwright for end-to-end testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.25.1",
+    "playwright": "^1.25.0"
+  },
+  "author": "Anthony Banks"
+}
