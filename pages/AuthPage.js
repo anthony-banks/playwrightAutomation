@@ -1,3 +1,5 @@
+const { clickElement, validateElementsPresence } = require('../globalFunctions');
+
 class AuthPage {
   constructor(page, expect) {
     this.page = page;

@@ -1,34 +1,59 @@
+const { clickElement, validateElementsPresence } = require('../globalFunctions');
+
 class HomePage {
-  constructor(page, expect) {
+  constructor(page) {
     this.page = page;
-    this.expect = expect;
-    this.registerLink = this.page.locator('a[href="/register"]');
-    this.loginLink = this.page.locator('a[href="/login"]');
-    this.cartLink = this.page.locator('a[href="/cart"]');
-    this.wishlistLink = this.page.locator('a[href="/wishlist"]');
-    this.profileLink = this.page.locator('a.account:has-text("abanks47+auto@gmail.com")');
-    this.logoutLink = this.page.locator('a[href="/logout"]');
+    this.logo = 'img[alt="Tricentis Demo Web Shop"]';
+    this.registerLink = 'a[href="/register"]';
+    this.loginLink = 'a[href="/login"]';
+    this.cartLink = 'a[href="/cart"]';
+    this.wishlistLink = 'a[href="/wishlist"]';
+    this.profileLink = 'a.account:has-text("abanks47+auto@gmail.com")';
+    this.logoutLink = 'a[href="/logout"]';
+    this.shippingReturnsLink = 'a[href="/shipping-returns"]';
+    this.addToCartButton = this.page.locator('input.button-2.product-box-add-to-cart-button');
+    this.addToCartSuccessBanner = this.page.locator('text=THe product has been added to your ');
   }
 
   async validateHomeHeader() {
-    await this.expect(this.registerLink).toBeVisible();
-    await this.expect(this.loginLink).toBeVisible();
-    await this.expect(this.cartLink).toHaveCount(2);
-    await this.expect(this.wishlistLink).toHaveCount(2);
+    // Use the global validateElementsPresence function to check if elements are visible and have the correct count
+    await validateElementsPresence(this.page, [this.logo, this.registerLink, this.loginLink, this.cartLink, this.wishlistLink]);
+
+    // Additional specific checks if needed
+    const cartCount = await this.page.locator(this.cartLink).count();
+    if (cartCount !== 2) {
+      throw new Error(`Expected 2 cart links, but found ${cartCount}`);
+    }
+
+    const wishlistCount = await this.page.locator(this.wishlistLink).count();
+    if (wishlistCount !== 2) {
+      throw new Error(`Expected 2 wishlist links, but found ${wishlistCount}`);
+    }
   }
 
   async validateLoggedInUser() {
-    await this.profileLink.waitFor({ timeout: 6000 });
-    await this.expect(this.profileLink).toBeVisible();
-    await this.expect(this.logoutLink).toBeVisible();
+    // Wait for the profile link to appear, then validate its presence along with the logout link
+    await validateElementsPresence(this.page, [this.profileLink, this.logoutLink], 6000);
   }
 
   async clickLoginLink() {
-    await this.loginLink.click();
+    // Use the global clickElement function to click the login link
+    await clickElement(this.page, this.loginLink);
   }
 
   async clickLogoutLink() {
-    await this.logoutLink.click();
+    // Use the global clickElement function to click the logout link
+    await clickElement(this.page, this.logoutLink);
+  }
+
+  async clickFirstAddToCartButton() {
+    await this.addToCartButton.first().click();
+
+    await validateElementsPresence(this.page, [this.addToCartSuccessBanner], 6000);
+  }
+
+  async clickCartLink() {
+    await clickElement(this.page, this.cartLink);
   }
 }
 

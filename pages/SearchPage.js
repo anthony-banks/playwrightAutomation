@@ -1,27 +1,33 @@
+const { clickElement, validateElementsPresence } = require('../globalFunctions');
+
 class SearchPage {
-  constructor(page, expect) {
+  constructor(page) {
     this.page = page;
-    this.expect = expect;
-    this.searchField = this.page.locator('input#small-searchterms');
-    this.searchButton = this.page.locator('input[value="Search"]');
-    this.productItems = this.page.locator('.product-item');
+    this.searchField = 'input#small-searchterms';
+    this.searchButton = 'input[value="Search"]';
+    this.productItems = '.product-item';
   }
 
   async searchOptionsDisplayed() {
-    await this.expect(this.searchField).toBeVisible();
-    await this.expect(this.searchButton).toBeVisible();
+    // Use the global validateElementsPresence function to check if the search field and button are visible
+    await validateElementsPresence(this.page, [this.searchField, this.searchButton]);
   }
 
   async submitSearch(searchTerm) {
     // Input text into the search field
-    await this.searchField.fill(searchTerm);
-    // Click the search button
-    await this.searchButton.click();
+    await this.page.fill(this.searchField, searchTerm);
+    // Use the global clickElement function to click the search button
+    await clickElement(this.page, this.searchButton);
   }
 
   async resultsDisplayed() {
-    // Check that exactly one product item is visible
-    await this.expect(this.productItems).toHaveCount(1);
+    // Use the global validateElementsPresence function to check that the product items are visible
+    await validateElementsPresence(this.page, this.productItems);
+    // Additionally, you can check that exactly one product item is visible
+    const count = await this.page.locator(this.productItems).count();
+    if (count !== 1) {
+      throw new Error(`Expected 1 product item, but found ${count}`);
+    }
   }
 }
 
