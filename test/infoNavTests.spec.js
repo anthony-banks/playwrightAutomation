@@ -1,8 +1,7 @@
-const { test, expect, chromium } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
+const hooks = require('../hooks');
 const { clickElement } = require('../globalFunctions');
 const { HomePage } = require('../pages/HomePage');
-
-let page, homePage, browser;
 
 // Array of footer links with corresponding expected URLs
 const footerLinks = [
@@ -14,30 +13,26 @@ const footerLinks = [
   { locator: 'a[href="/contactus"]', expectedUrl: 'https://demowebshop.tricentis.com/contactus' }
 ];
 
-test.beforeEach(async () => {
-  browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  page = await context.newPage();
-  await page.goto('http://demowebshop.tricentis.com');
+// Set up the hooks with HomePage, no SearchPage, and expect
+hooks.setup(HomePage, null, null,  expect);
 
-  homePage = new HomePage(page, expect);
-  // Validate elements are visible
-  await homePage.validateHomeHeader();
+test.beforeEach(async () => {
+  await hooks.beforeEach(); // Call beforeEach from hooks
 });
 
 test.afterEach(async () => {
-  await browser.close();
+  await hooks.afterEach(); // Call afterEach from hooks
 });
 
 // Parameterized test for each footer link
 test.describe('Information column Footer Link Tests', () => {
   for (const link of footerLinks) {
     test(`should redirect to correct URL when clicking ${link.locator}`, async () => {
-      // Click the footer link
-      await clickElement(page, link.locator);
+      // Click the footer link using page initialized in hooks
+      await clickElement(hooks.page, link.locator);
 
       // Verify the correct URL
-      await expect(page).toHaveURL(link.expectedUrl);
+      await expect(hooks.page).toHaveURL(link.expectedUrl);
     });
   }
 });
