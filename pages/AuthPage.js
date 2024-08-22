@@ -1,4 +1,4 @@
-const { clickElement, validateElementsPresence } = require('../globalFunctions');
+const { validateElementsPresence } = require('../globalFunctions');
 
 class AuthPage {
   constructor(page, expect) {
@@ -11,11 +11,13 @@ class AuthPage {
   }
 
   async validateAuthPageLoads() {
-    await this.expect(this.emailInput).toBeVisible();
-    await this.expect(this.passwordInput).toBeVisible();
-    await this.expect(this.loginButton).toBeVisible();
+    await validateElementsPresence(this.page, [this.loginButton, this.passwordInput, this.emailInput]);
   }
 
+  async loginErrorPopulates() {
+    await validateElementsPresence(this.page, [this.loginButton]);
+  }
+  
   async inputCredentials(email, password) {
     // Input text into the email field
     await this.emailInput.fill(email);
@@ -23,10 +25,6 @@ class AuthPage {
     await this.passwordInput.fill(password);
     // Click the login button
     await this.loginButton.click();
-  }
-
-  async loginErrorPopulates() {
-    await this.expect(this.loginError).toBeVisible();
   }
 }
 

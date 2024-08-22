@@ -5,6 +5,7 @@ const { HomePage } = require('../pages/HomePage');
 let page, homePage, authPage, browser;
 
 test.beforeEach(async () => {
+  
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   page = await context.newPage();

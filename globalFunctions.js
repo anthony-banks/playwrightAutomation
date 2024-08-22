@@ -24,4 +24,8 @@ async function validateElementsPresence(page, selectors) {
   }
 }
 
-module.exports = { clickElement, validateElementsPresence };
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+module.exports = { clickElement, validateElementsPresence, sleep };
