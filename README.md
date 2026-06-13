@@ -35,9 +35,16 @@ The test suite covers the following user flows:
   - User logout
   - Login validation with invalid credentials
 
-- **Shopping Cart** (`cartTests.spec.js`)
+- **Shopping Cart** (`cartTests.spec.js`, `cartCrudTests.spec.js`) - **ENHANCED!**
   - Adding products to cart
   - Cart page validation
+  - **Full CRUD Operations Suite** (`cartCrudTests.spec.js`):
+    - CREATE: Adding single/multiple items, cart persistence
+    - READ: Viewing cart items, reading product names and quantities
+    - UPDATE: Modifying quantities (manual, increment, decrement)
+    - DELETE: Removing items, clearing cart
+    - Mixed workflows and edge case validation
+  - **25 comprehensive CRUD test cases** demonstrating full lifecycle testing
 
 - **Product Search** (`searchTests.spec.js`)
   - Basic product search functionality
@@ -69,17 +76,18 @@ The test suite covers the following user flows:
 │   └── locators.js             # Centralized element selectors
 ├── pages/
 │   ├── AuthPage.js             # Authentication page object
-│   ├── CartPage.js             # Shopping cart page object
+│   ├── CartPage.js             # Shopping cart page object (ENHANCED with CRUD methods!)
 │   ├── HomePage.js             # Homepage page object
 │   ├── RegisterPage.js         # User registration page object (NEW!)
 │   └── SearchPage.js           # Search page object
 ├── test/
 │   ├── authTests.spec.js       # Authentication test suite
 │   ├── cartTests.spec.js       # Cart functionality tests
+│   ├── cartCrudTests.spec.js   # Cart CRUD operations (NEW! - 25 tests)
 │   ├── csNavTests.spec.js      # Customer service navigation tests
 │   ├── homeTests.spec.js       # Homepage tests
 │   ├── infoNavTests.spec.js    # Information links tests
-│   ├── registerTests.spec.js   # User registration tests (NEW! - 15 tests)
+│   ├── registerTests.spec.js   # User registration tests (15 tests)
 │   └── searchTests.spec.js     # Search functionality tests
 ├── globalFunctions.js          # Reusable utility functions
 ├── hooks.js                    # Test lifecycle hooks

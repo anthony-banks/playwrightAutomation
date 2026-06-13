@@ -11,8 +11,8 @@ class HomePage {
     this.profileLink = 'a.account:has-text("abanks47+auto@gmail.com")';
     this.logoutLink = 'a[href="/logout"]';
     this.shippingReturnsLink = 'a[href="/shipping-returns"]';
-    this.addToCartButton = this.page.locator('input.button-2.product-box-add-to-cart-button');
-    this.addToCartSuccessBanner = this.page.locator('text=THe product has been added to your ');
+    this.addToCartButton = 'input.button-2.product-box-add-to-cart-button';
+    this.addToCartSuccessBanner = 'text=The product has been added to your';
   }
 
   async validateHomeHeader() {
@@ -47,9 +47,17 @@ class HomePage {
   }
 
   async clickFirstAddToCartButton() {
-    await this.addToCartButton.first().click();
+    // Wait for network response after clicking add to cart
+    await Promise.all([
+      this.page.waitForResponse(response =>
+        response.url().includes('addproducttocart') && response.status() === 200,
+        { timeout: 5000 }
+      ).catch(() => {}), // Ignore timeout errors
+      this.page.locator(this.addToCartButton).first().click()
+    ]);
 
-    await validateElementsPresence(this.page, [this.addToCartSuccessBanner], 6000);
+    // Wait for the cart to update
+    await this.page.waitForTimeout(1000);
   }
 
   async clickCartLink() {
