@@ -43,8 +43,14 @@ test.describe('Shopping Cart - CREATE Operations', () => {
     // Add first product
     await homePage.clickFirstAddToCartButton();
 
+    // Wait for stability before adding second item
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
+
     // Go back to books page and add another
     await page.goto('http://demowebshop.tricentis.com/books');
+    await page.waitForLoadState('networkidle');
+
     await page.locator('input.button-2.product-box-add-to-cart-button').nth(1).click();
     await page.waitForTimeout(1500);
 
@@ -189,9 +195,16 @@ test.describe('Shopping Cart - DELETE Operations', () => {
   test.beforeEach(async () => {
     // Add items to cart for delete tests
     await homePage.clickFirstAddToCartButton();
+
+    // Wait for page to be stable, then add second item
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
     await page.goto('http://demowebshop.tricentis.com/books');
+    await page.waitForLoadState('networkidle');
+
     await page.locator('input.button-2.product-box-add-to-cart-button').nth(1).click();
     await page.waitForTimeout(1500);
+
     await homePage.clickCartLink();
   });
 
@@ -326,10 +339,17 @@ test.describe('Shopping Cart - Validation & Edge Cases', () => {
     // This should pass
     await cartPage.validateCartHasItems(1);
 
+    // Wait for stability before adding second item
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
+
     // Add another item
     await page.goto('http://demowebshop.tricentis.com/books');
+    await page.waitForLoadState('networkidle');
+
     await page.locator('input.button-2.product-box-add-to-cart-button').nth(1).click();
     await page.waitForTimeout(1500);
+
     await homePage.clickCartLink();
 
     await cartPage.validateCartHasItems(2);
