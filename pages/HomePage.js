@@ -47,17 +47,15 @@ class HomePage {
   }
 
   async clickFirstAddToCartButton() {
-    // Wait for network response after clicking add to cart
-    await Promise.all([
-      this.page.waitForResponse(response =>
-        response.url().includes('addproducttocart') && response.status() === 200,
-        { timeout: 5000 }
-      ).catch(() => {}), // Ignore timeout errors
-      this.page.locator(this.addToCartButton).first().click()
-    ]);
+    // Navigate to a category page where add-to-cart actually works
+    // (homepage buttons redirect to product pages, category buttons add to cart)
+    await this.page.goto('http://demowebshop.tricentis.com/books');
+
+    // Click the first add to cart button on the books page
+    await this.page.locator(this.addToCartButton).first().click();
 
     // Wait for the cart to update
-    await this.page.waitForTimeout(1000);
+    await this.page.waitForTimeout(1500);
   }
 
   async clickCartLink() {
