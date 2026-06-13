@@ -20,6 +20,16 @@ This project demonstrates modern test automation best practices by testing a rea
 
 The test suite covers the following user flows:
 
+- **User Registration** (`registerTests.spec.js`) - **NEW!**
+  - Successful registration with valid data (multiple scenarios)
+  - Required field validation (first name, last name, email, password)
+  - Email format validation
+  - Password strength validation (minimum 6 characters)
+  - Password confirmation matching
+  - Duplicate email detection
+  - Edge cases (special characters, email formats)
+  - **15 comprehensive test cases**
+
 - **Authentication** (`authTests.spec.js`)
   - User login with valid credentials
   - User logout
@@ -61,6 +71,7 @@ The test suite covers the following user flows:
 │   ├── AuthPage.js             # Authentication page object
 │   ├── CartPage.js             # Shopping cart page object
 │   ├── HomePage.js             # Homepage page object
+│   ├── RegisterPage.js         # User registration page object (NEW!)
 │   └── SearchPage.js           # Search page object
 ├── test/
 │   ├── authTests.spec.js       # Authentication test suite
@@ -68,6 +79,7 @@ The test suite covers the following user flows:
 │   ├── csNavTests.spec.js      # Customer service navigation tests
 │   ├── homeTests.spec.js       # Homepage tests
 │   ├── infoNavTests.spec.js    # Information links tests
+│   ├── registerTests.spec.js   # User registration tests (NEW! - 15 tests)
 │   └── searchTests.spec.js     # Search functionality tests
 ├── globalFunctions.js          # Reusable utility functions
 ├── hooks.js                    # Test lifecycle hooks
