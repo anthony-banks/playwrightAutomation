@@ -6,10 +6,21 @@ on:
   pull_request:
     branches: [ main, prod ]
 
+# Cancel any in-progress run for the same branch/PR when a new commit is pushed
+concurrency:
+  group: playwright-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    timeout-minutes: 20
+    timeout-minutes: 15
     runs-on: ubuntu-latest
+
+    # Official Playwright image ships all browsers + system deps pre-installed,
+    # so there is no browser download and no `--with-deps` apt step to hang on.
+    # Keep this tag in sync with the @playwright/test version in package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.46.1-jammy
 
     steps:
     - name: Checkout code
@@ -23,25 +34,6 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
-
-    - name: Get Playwright version
-      id: playwright-version
-      run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> $GITHUB_OUTPUT
-
-    - name: Cache Playwright browsers
-      uses: actions/cache@v4
-      id: playwright-cache
-      with:
-        path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
-
-    - name: Install Playwright browsers
-      if: steps.playwright-cache.outputs.cache-hit != 'true'
-      run: npx playwright install chromium --with-deps
-
-    - name: Install system dependencies only
-      if: steps.playwright-cache.outputs.cache-hit == 'true'
-      run: npx playwright install-deps chromium
 
     - name: Run Playwright tests
       run: npx playwright test
