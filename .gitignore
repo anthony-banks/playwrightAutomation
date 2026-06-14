@@ -1,6 +1,9 @@
 # Node modules
 node_modules/
 
+# Claude Code local config
+.claude/
+
 # Playwright test results
 test-results/
 playwright-report/
